@@ -78,7 +78,7 @@ AC_DEFUN([GIV_CHECK_GMP], [
 	fi
 
 	##### OK, we have found a working GMP. Check if it has c++ bindings, and is recent enough
-	GMP_LIBS="$GMP_LIBS -lgmpxx"
+	GMP_LIBS="-lgmpxx $GMP_LIBS"
 	CXXFLAGS="${BACKUP_CXXFLAGS} ${GMP_CFLAGS}"
 	CPPFLAGS="${BACKUP_CPPFLAGS} ${GMP_CFLAGS}"
 	AC_LANG_PUSH([C++])
