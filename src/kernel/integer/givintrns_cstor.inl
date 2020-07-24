@@ -126,7 +126,7 @@ namespace Givaro {
     //#endif
     inline const typename IntRNSsystem< Container, Alloc >::Element IntRNSsystem< Container, Alloc >::product() const
     {
-        ((IntRNSsystem< Container, Alloc >*)this)->ComputeProd();
+        ((const IntRNSsystem< Container, Alloc >*)this)->ComputeProd();
         return _prod;
     }
 
@@ -137,7 +137,7 @@ namespace Givaro {
     //#endif
     inline const typename IntRNSsystem< Container, Alloc >::array& IntRNSsystem< Container, Alloc >::Reciprocals() const
     {
-        if (_ck.size() ==0) ((IntRNSsystem< Container, Alloc >*)this)->ComputeCk();
+        if (_ck.size() ==0) ((const IntRNSsystem< Container, Alloc >*)this)->ComputeCk();
         return _ck;
     }
 
@@ -149,7 +149,7 @@ namespace Givaro {
     //#endif
     inline const typename IntRNSsystem< Container, Alloc >::Element IntRNSsystem< Container, Alloc >::reciprocal(const size_t i) const
     {
-        if (_ck.size() ==0) ((IntRNSsystem< Container, Alloc >*)this)->ComputeCk();
+        if (_ck.size() ==0) ((const IntRNSsystem< Container, Alloc >*)this)->ComputeCk();
         return _ck[i];
     }
 
