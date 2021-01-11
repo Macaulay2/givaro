@@ -40,11 +40,13 @@ AC_DEFUN([GIV_CHECK_GMP], [
 
 	GMP_CFLAGS=
 	GMP_LIBS=
+	GMP_DIRLIBS=
+	GMP_LSTLIBS="-lgmp"
 	AS_IF([ test "x$GMP_HOME_PATH" != "x" ], [
 		GMP_CFLAGS="-I${GMP_HOME_PATH}/include"
-		GMP_LIBS="-L${GMP_HOME_PATH}/lib"
+		GMP_DIRLIBS="-L${GMP_HOME_PATH}/lib"
 	])
-	GMP_LIBS="$GMP_LIBS -lgmp"
+	GMP_LIBS="${GMP_DIRLIBS} ${GMP_LSTLIBS}"
 
 	######### try to compile
 	CXXFLAGS="${BACKUP_CXXFLAGS} ${GMP_CFLAGS}"

@@ -123,7 +123,7 @@ namespace Givaro {
         typedef typename OP::Domain_t Domain_t;
         Type_t& _val;
         Curried1( const Domain_t& D, Type_t& val ) : OP(D), _val(val) {}
-        Curried1( const Domain_t& D, const Type_t& val ) : OP(D), _val((Type_t&)val) {}
+        Curried1( const Domain_t& D, const Type_t& val ) : OP(D), _val((const Type_t&)val) {}
         void operator()(Type_t& v1, const Type_t& v2) { OP::operator()(v1, _val, v2); }
         void operator()(Type_t& v1) { OP::operator()(v1, _val); }
     };
@@ -135,7 +135,7 @@ namespace Givaro {
         typedef typename OP::Domain_t Domain_t;
         const Type_t& _val;
         Curried2( const Domain_t& D, Type_t& val ) : OP(D), _val(val) {}
-        Curried2( const Domain_t& D, const Type_t& val ) : OP(D), _val((Type_t&)val) {}
+        Curried2( const Domain_t& D, const Type_t& val ) : OP(D), _val((const Type_t&)val) {}
         void operator()(Type_t& v1, const Type_t& v2) { OP::operator()(v1, v2, _val); }
         void operator()(Type_t& v1) { OP::operator()(v1, _val); }
     };
