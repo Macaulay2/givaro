@@ -1,4 +1,4 @@
-/* ruint/ruint.h - Class definition of ruint<K> from RecInt library
+/* rint/rint.h - Class definition of rint<K> from RecInt library
 
    Copyright Université Grenoble Alpes
 Contributors :
@@ -44,13 +44,14 @@ knowledge of the CeCILL-B license and that you accept its terms.
 #include "ruruint.h"
 #include "givaro/givtypestring.h"
 #include "rumanip.h" // ms_limb
+#include "rutools.h" // mod_n
 
 // --------------------------------------------------------------
-// ---------------- Declaration of class ruint ------------------
+// ---------------- Declaration of class rint ------------------
 
 namespace RecInt
 {
-    /* Basic definition of ruint */
+    /* Basic definition of rint */
     template <size_t K> class rint {
     public:
         // A rint is stored as a ruint
@@ -77,6 +78,21 @@ namespace RecInt
         inline bool isNegative() const { return ms_limb(Value) & __RECINT_MAXPOWTWO; }
         // *this >= 0
         inline bool isPositive() const { return !(isNegative()); }
+
+		// max Cardinality : 2^( (2^K-1) / 2 )
+        static rint<K> maxCardinality() {
+            rint<K> max( ruint<K>::maxFFLAS() );
+           return max;
+        }
+
+		// max Elements
+        static rint<K> maxElement() {
+            return ruint<K>::maxElement()/2;
+        }
+
+		// max Cardinality for fflas-ffpack : supports (a*b+c*d)
+        // 2^(2^(K-1)-1)
+        static rint<K> maxFFLAS();
     };
 
     using rint64 =  rint<6>;
@@ -84,6 +100,20 @@ namespace RecInt
     using rint256 = rint<8>;
     using rint512 = rint<9>;
 
+
+}
+
+namespace RecInt
+{
+    // a = 0
+    template <size_t K> inline void reset(rint<K>& a) {
+        reset(a.Value);
+    }
+
+        // a = b
+    template <size_t K> inline void copy(rint<K>& a, const rint<K>& b) {
+        copy(a.Value, b.Value);
+    }
 
 }
 
@@ -95,6 +125,7 @@ namespace std
     template <size_t K> struct make_signed<RecInt::ruint<K>> {
         typedef RecInt::rint<K> type;
     };
+
 }
 
 #endif

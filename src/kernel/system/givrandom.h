@@ -4,7 +4,7 @@
 // Givaro is governed by the CeCILL-B license under French law
 // and abiding by the rules of distribution of free software.
 // see the COPYRIGHT file for more details.
-// Time-stamp: <14 May 19 11:13:59 Jean-Guillaume.Dumas@imag.fr>
+// Time-stamp: <10 Dec 21 13:22:09 Jean-Guillaume.Dumas@imag.fr>
 // =================================================================== //
 
 /*! @file givrandom.h
@@ -29,6 +29,7 @@ extern "C" {
 
 #define _GIVRAN_MULTIPLYER_ 950706376_ui64
 #define _GIVRAN_MODULO_     2147483647_ui64
+#define _GIVRAN_HALFMOD_    1073741824_ui64
 
 namespace Givaro {
 
@@ -37,6 +38,8 @@ namespace Givaro {
         mutable uint64_t _seed;
     public:
         typedef GivRandom random_generator;
+        typedef uint64_t random_t;
+        typedef uint64_t seed_t;
 
         GivRandom(const uint64_t s = 0)
         : _seed(s)
@@ -61,15 +64,11 @@ namespace Givaro {
             return _seed;
         }
 
-
         uint64_t max_rand() const
         {
             return _GIVRAN_MODULO_;
         }
 
-
-        // #if defined(__GIVARO_INT64)
-#if 1
         uint64_t operator() () const
         {
             return _seed = (uint64_t)(
@@ -77,15 +76,11 @@ namespace Givaro {
                                       * (int64_t)_seed
                                       % (int64_t)_GIVRAN_MODULO_ );
         }
-#else
-        uint64_t operator() () const
+
+        bool brand() const
         {
-            return _seed = (uint64_t)(
-                                      (uint64_t)_GIVRAN_MULTIPLYER_
-                                      * _seed
-                                      % (uint64_t)_GIVRAN_MODULO_ );
+            return !(this->operator()() & _GIVRAN_HALFMOD_);
         }
-#endif
 
         template<class XXX> XXX& operator() (XXX& x) const
         {

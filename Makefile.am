@@ -34,7 +34,8 @@ benchmarks/perfpublisher:
 tests/perfpublisher:
 	(cd tests; ${MAKE} perfpublisher)
 
-bin_SCRIPTS=givaro-config givaro-makefile
+bin_SCRIPTS=givaro-config
+pkgdata_DATA = givaro-makefile
 
 EXTRA_DIST=COPYRIGHT Licence_CeCILL-B_V1-en.txt Licence_CeCILL-B_V1-fr.txt \
 	   givaro.doxy \
@@ -70,7 +71,7 @@ docs_dev:docs/givaro-dev-html/index.html
 docs/givaro-dev-html/index.html:
 	(cd docs; ${MAKE} docs_dev)
 
-VERSION=4.1.1
+VERSION=4.2.0
 
 git:
 	git commit -a; git pull; git push

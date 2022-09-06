@@ -4,6 +4,7 @@
 Contributors :
 Alexis BREUST (alexis.breust@gmail.com 2014)
 Christophe CHABOT (christophechabotcc@gmail.com 2011)
+Jean-Guillaume DUMAS
 
 This software is a computer program whose purpose is to provide an fixed precision arithmetic library.
 
@@ -175,43 +176,60 @@ namespace RecInt
 
 }
 
-
 // --------------------------------------------------------------
 // -------------------- max Element -----------------------
 
 namespace RecInt {
 
+		// max Cardinality
     template <size_t K>
-    inline ruint<K> ruint<K>::maxCardinality() {
-        ruint<K> max;
-        max.High = ruint<K-1>::maxCardinality();
-        fill_with_1(max.Low);
-        return max;
-    }
-
-    inline ruint<__RECINT_LIMB_SIZE> ruint<__RECINT_LIMB_SIZE>::maxCardinality() {
-        ruint<__RECINT_LIMB_SIZE> max; return fill_with_1(max);
-    }
-
-    template <size_t K>
-    inline ruint<K> ruint<K>::maxModulus() {
+    inline ruint<K> ruint<K>::maxCardinality() { // 2^(2^(K-1))
         ruint<K> max;
         max.High = 1;
         return max;
     }
 
-    inline ruint<__RECINT_LIMB_SIZE> ruint<__RECINT_LIMB_SIZE>::maxModulus() {
-        ruint<__RECINT_LIMB_SIZE> max(1); return max <<= (__RECINT_LIMB_SIZE-1);
+    inline ruint<__RECINT_LIMB_SIZE> ruint<__RECINT_LIMB_SIZE>::maxCardinality() {
+        ruint<__RECINT_LIMB_SIZE> max(1); return max <<= (1u<<(__RECINT_LIMB_SIZE-1u));
+    }
+
+		// max Element
+    template <size_t K>
+    inline ruint<K> ruint<K>::maxElement() {
+        ruint<K> max;
+        max.High = ruint<K-1>::maxElement();
+        fill_with_1(max.Low);
+        return max;
+    }
+
+    inline ruint<__RECINT_LIMB_SIZE> ruint<__RECINT_LIMB_SIZE>::maxElement() {
+        ruint<__RECINT_LIMB_SIZE> max; return fill_with_1(max);
     }
 
 #  if defined(__RECINT_USE_FAST_128)
-    inline ruint<__RECINT_LIMB_SIZE+1> ruint<__RECINT_LIMB_SIZE+1>::maxCardinality() {
+    inline ruint<__RECINT_LIMB_SIZE+1> ruint<__RECINT_LIMB_SIZE+1>::maxElement() {
         ruint<__RECINT_LIMB_SIZE+1> max; return fill_with_1(max);
     }
-    inline ruint<__RECINT_LIMB_SIZE+1> ruint<__RECINT_LIMB_SIZE+1>::maxModulus() {
-        ruint<__RECINT_LIMB_SIZE+1> max(1); return max <<= (__RECINT_LIMB_SIZE);
+    inline ruint<__RECINT_LIMB_SIZE+1> ruint<__RECINT_LIMB_SIZE+1>::maxCardinality() {
+        ruint<__RECINT_LIMB_SIZE+1> max(1); return max <<= (1u<<(__RECINT_LIMB_SIZE));
     }
 #  endif
+
+
+		// max Cardinality for fflas-ffpack : supports (a*b+c*d)
+        // 2^(2^(K-1)-0.5) = 2^(2^(K-1)-32+31.5) = 2^(2^(K-1)-32) *2^(31.5)
+    template <size_t K>
+    inline ruint<K> ruint<K>::maxFFLAS() {
+            // Approximated: sqrt(2) only up 31 bits
+        ruint<K> max(1);					// (2^K-1)/2 = (2^K-64)/2+31.5
+        max <<= ((1u<<(K-1))-32u);			// So first 2^{K-1}-32
+        max *= __RECINT_THIRTYONEPOINTFIVE;	// Second mul by 2^{31.5}
+        return max;
+    }
+
+    inline ruint<__RECINT_LIMB_SIZE> ruint<__RECINT_LIMB_SIZE>::maxFFLAS() {
+        return ruint<__RECINT_LIMB_SIZE>(__RECINT_THIRTYONEPOINTFIVE);
+    }
 
 }
 

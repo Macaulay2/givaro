@@ -1,3 +1,11 @@
+2021-12-14 v4.2.0
+	* change in the API for random iterators
+	* replace micro-architecture detection by march=native by default or user provided flags
+	* dump support of gcc-4.9.2 -> minversion is now gcc-5
+	* new AES example
+	* new Modular ring over RecInt::rint elements
+	* fixed the max cardinalities for rings
+	* fix many bugs
 2019-06-07 v4.1.1
 	Minor updates:
 	* add README.md in distribution

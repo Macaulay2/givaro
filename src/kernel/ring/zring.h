@@ -21,10 +21,10 @@
 #define __GIVARO_ring_zring_H
 
 #include <algorithm>
-#include <typeinfo>
 #include <math.h>
 
 #include "givaro/unparametric-operations.h"
+#include "givaro/givtypestring.h"
 #include "givaro/givranditer.h"
 #include "givaro/givcaster.h"
 
@@ -50,7 +50,10 @@ namespace Givaro
         using Rep = _Element;
         using Self_t = UnparametricZRing<Element>;
         using Parent_t = UnparametricOperations<Element>;
-        using Residu_t = int64_t; // Unparametric have no residue, this is used only for cardinality/characteristic
+		// Unparametric have no residue,
+        // this is used only for cardinality/characteristic which behave like integers
+        // with a ZRing the element is supposed to behave like an integer
+        using Residu_t = _Element;
         using Element_ptr = Element*;
         using ConstElement_ptr = const Element*;
         enum { size_rep = sizeof(Element) };
@@ -119,10 +122,16 @@ namespace Givaro
             ;
             return a; }
 
+        // --------
+        // -- type_string
+        static const std::string type_string () {
+            return "ZRing<" + TypeString<Element>::get() + '>';
+        }
+
         //----- IO
         std::ostream& write(std::ostream &os) const
         {
-            return os << "ZRing<" << typeid(Element).name() << ">";
+            return os << type_string();
         }
         std::ostream& write(std::ostream &os, const Element& a) const
         {
@@ -135,13 +144,13 @@ namespace Givaro
     };
 
     template<typename Element>
-    class ZRing : public UnparametricZRing<Element> 
+    class ZRing : public UnparametricZRing<Element>
     {
         using Self_t = ZRing<Element>;
         using Parent_t = UnparametricZRing<Element>;
         using Parent_t::Parent_t; // inherit constructors
     };
-    
+
     using FloatDomain = ZRing<float>;
     using DoubleDomain = ZRing<double>;
 
