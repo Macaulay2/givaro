@@ -7,7 +7,7 @@
 
 AC_PREREQ([2.68])
 
-AC_INIT([Givaro],[4.2.0],[http://github.com/linbox-team/givaro],[givaro],
+AC_INIT([Givaro],[4.2.1],[http://github.com/linbox-team/givaro],[givaro],
 		[https://casys.gricad-pages.univ-grenoble-alpes.fr/givaro])
 
 AC_CONFIG_MACRO_DIR([macros])
@@ -121,7 +121,7 @@ AS_ECHO([---------------------------------------])
 
 # Look for GMP and add flags if necessary
 GIV_CHECK_GMP(40000)
-REQUIRED_FLAGS+=" ${GMP_CFLAGS}"
+REQUIRED_FLAGS="${REQUIRED_FLAGS} ${GMP_CFLAGS}"
 
 GIV_DOC
 

@@ -21,7 +21,6 @@
 #include "givaro/givindeter.h"
 #include "givaro/givinteger.h"
 #include "givaro/givrandom.h"
-#include "givaro/givindeter.h"
 
 #ifndef __GIV_STANDARD_VECTOR
 #include <vector>
@@ -261,6 +260,12 @@ namespace Givaro {
         Rep& stdmul( Rep& R, const Rep& P, const Rep& Q) const;
         // Forces first level of Karatsuba multiplication algorithm
         Rep& karamul( Rep& R, const Rep& P, const Rep& Q) const;
+        // Generic middle product with dynamic recursive choices between stdmidmul and karamidmul
+        Rep& midmul ( Rep& R, const Rep& P, const Rep& Q ) const;
+        // Forces standard middle product
+        Rep& stdmidmul( Rep& R, const Rep& P, const Rep& Q) const;
+        // Forces first level of Karatsuba balanced middle product algorithm
+        Rep& karamidmul( Rep& R, const Rep& P, const Rep& Q ) const;
 
         // Compute truncated mul: only the coefficients inside
         // the degree interval, included
@@ -319,7 +324,6 @@ namespace Givaro {
         Rep& pdiv( Rep& q, Type_t& m, const Rep& a, const Rep& b ) const;
         Rep& pdiv( Rep& q, const Rep& a, const Rep& b ) const;
 
-
         // -- gcd D = gcd(P,Q) = P*U+Q*V;
         // Rep& gcd ( Rep& D, const Rep& P, const Rep& Q) const;
         Rep& gcd ( Rep& D, const Rep& P, const Rep& Q) const;
@@ -329,6 +333,18 @@ namespace Givaro {
         Rep& invmod ( Rep& U, const Rep& P, const Rep& Q) const;
         // -- modular inverse of P : U P = e + V Q where e is of degree 0
         Rep& invmodunit ( Rep& U, const Rep& P, const Rep& Q) const;
+
+
+        // -- specializations mod X^l
+        	// 		A <-- A mod X^l
+        Rep& modpowxin ( Rep& A, const Degree& l) const;
+        	// 		Am <-- A mod X^l
+        Rep& modpowx ( Rep& Am, const Rep& A, const Degree& l) const;
+        // 		G <-- U, s. t. U*A = 1 mod X^l
+        Rep& invmodpowx ( Rep& G, const Rep& A, const Degree& l) const;
+            // 		G <-- 2G-AG^2 mod X^l
+            // 		S and Am are temp. variables for Newton-Raphson iteration
+        Rep& newtoninviter ( Rep& G, Rep& S, Rep& Am, const Rep& A, const Degree& i) const;
 
         // -- rational reconstruction
         // -- Builds N and D such that P * D = N mod M and degree(N) <= dk
@@ -404,6 +420,21 @@ namespace Givaro {
         Rep& karamul( Rep& R, const RepIterator Rbeg, const RepIterator Rend,
                       const Rep& P, const RepConstIterator Pbeg, const RepConstIterator Pend,
                       const Rep& Q, const RepConstIterator Qbeg, const RepConstIterator Qend ) const;
+
+        // Middle product only between iterator intervals
+        Rep& midmul( Rep& R, const RepIterator Rbeg, const RepIterator Rend,
+                  const Rep& P, const RepConstIterator Pbeg, const RepConstIterator Pend,
+                  const Rep& Q, const RepConstIterator Qbeg, const RepConstIterator Qend ) const;
+
+        // Middle product of P of size m+n-1 and Q of size n: MP(P,Q)=((PQ) quo X^(n-1)) mod X^m of size m
+        Rep& stdmidmul( Rep& R, const RepIterator Rbeg, const RepIterator Rend,
+                        const Rep& P, const RepConstIterator Pbeg, const RepConstIterator Pend,
+                        const Rep& Q, const RepConstIterator Qbeg, const RepConstIterator Qend) const;
+
+        // Karastuba balanced middle product between iterator bounds
+        Rep& karamidmul( Rep& R, const RepIterator Rbeg, const RepIterator Rend,
+                         const Rep& P, const RepConstIterator Pbeg, const RepConstIterator Pend,
+                         const Rep& Q, const RepConstIterator Qbeg, const RepConstIterator Qend) const;
 
         Rep& sqr( Rep& R, const RepIterator Rbeg, const RepIterator Rend,
                   const Rep& P, const RepConstIterator Pbeg, const RepConstIterator Pend) const;

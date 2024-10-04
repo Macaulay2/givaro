@@ -11,11 +11,6 @@
 
 #include "gmp++/gmp++.h"
 
-namespace std {
-    template <bool B>
-    using bool_constant = integral_constant<bool, B>;
-}
-
 namespace Givaro
 {
 
@@ -36,8 +31,9 @@ namespace Givaro
      */
     template<bool _Unsigned=true, bool _Exact_Size=false>
     class RandomIntegerIterator {
-        typedef typename
-        std::bool_constant<_Exact_Size>::type _Exact_Size_t;
+      typedef typename
+      std::integral_constant<bool,_Exact_Size>::type _Exact_Size_t;
+
     public:
         typedef Givaro::Integer Integer_Type ;
         typedef Givaro::Integer Element ;
@@ -91,7 +87,6 @@ namespace Givaro
             if (this != &R) {
                 _bits = R._bits;
                 _integer = R._integer;
-                const_cast<Integer_Domain&>(_ring)=R._ring;
             }
             return *this;
         }

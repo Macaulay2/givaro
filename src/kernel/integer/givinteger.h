@@ -39,15 +39,8 @@ namespace Givaro {
 
         using Parent_t::Parent_t; // inherit constructors
 
-        int operator==( const Self_t&) const
-        {
-            return 1;
-        }
-        int operator!=( const Self_t&) const
-        {
-            return 0;
-        }
-
+        int operator==( const Self_t&) const { return 1; }
+        int operator!=( const Self_t&) const { return 0; }
 
         template<class XXX> XXX& convert(XXX& x, const Rep& a) const
         {
@@ -179,6 +172,19 @@ namespace Givaro {
             return g;
         }
 
+            // Inverse in Z
+        Rep& inv(Rep& u, const Rep& a) const
+        {
+            if (isUnit(a)) return assign(u,a);
+            else throw GivMathError("*** Error: non invertible in ZRing.inv") ;
+        }
+        Rep& invin(Rep& u) const
+        {
+            if (isUnit(u)) return u;
+            else throw GivMathError("*** Error: non invertible in ZRing.invin") ;
+        }
+
+            // Modular inverses
         Rep& inv(Rep& u, const Rep& a, const Rep& b) const
         {
             return ::Givaro::inv(u,a,b);
